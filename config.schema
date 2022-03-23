@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+
+  "type": "object",
+  "additionalProperties": {
+    "$ref": "#/$defs/wifi"
+  },
+
+  "$defs": {
+    "wifi": {
+      "type": "object",
+      "properties": {
+        "ssid": {
+          "type": "string",
+          "minLength": 1
+        },
+        "security": {
+          "$ref": "#/$defs/securitytypes"
+        },
+        "password": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 63
+        },
+        "hidden": {
+          "type": "boolean"
+        }
+      },
+      "required": ["security"],
+      "additionalProperties": false,
+
+      "oneOf": [
+        {
+          "properties": { "security": { "const": "Open" } }
+        },
+        {
+          "properties": { "security": { "const": "Enhanced Open" } }
+        },
+        { "required": ["password"] }
+      ]
+    },
+
+    "securitytypes": {
+      "oneOf": [
+        {
+          "const": "Open"
+        },
+        {
+          "const": "Enhanced Open"
+        },
+        {
+          "const": "WEP"
+        },
+        {
+          "const": "WPA"
+        },
+        {
+          "const": "WPA2-PSK"
+        },
+        {
+          "const": "WPA3-PSK"
+        }
+      ]
+    }
+  }
+}

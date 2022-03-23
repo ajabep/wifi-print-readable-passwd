@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "wifi-print-readable-passwd"
+version = "0.1.0"
+description = "Provide a readable and accessible Wi-Fi card."
+authors = ["Ajabep <ajabep@tutanota.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+click = "^8.0.4"
+tomlkit = "^0.10.0"
+fpdf2 = "^2.5.1"
+qrcode = "^7.3.1"
+jschon = "^0.8.4"
+aenum = "^3.1.8"
+
+[tool.poetry.dev-dependencies]
+Django = "^4.0.3"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

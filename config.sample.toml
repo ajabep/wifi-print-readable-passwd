@@ -1,0 +1,26 @@
+# Example of configuration
+
+[Guest]
+# Here the SSID is "Guest"
+
+# Accepted values:
+#
+# Open
+# WEP
+# WPA
+# WPA2-PSK
+# WPA3-PSK
+#
+# Not that the three last has no difference on the QR code. However it will have in the printed card.
+security = "Open"
+
+# password = "" will not be accepted because the WiFi is open
+
+# By default, the hotspot is NOT considered as hidden
+
+
+["wifi5 @ Lab"]
+ssid = "SSIDWifi"  # to force SSID than the key
+security = "WPA3-PSK"
+password = "ThisIsAnExample"
+hidden = true
