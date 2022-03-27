@@ -146,7 +146,7 @@ def add_qr_code(pdf: fpdf.FPDF, ssid: str, security: WifiSecurity, password: Uni
         e_ssid = escape(ssid)
 
         if password is None:
-            e_passwd = "None"
+            e_passwd = "None"  # nosec
         else:
             e_passwd = escape(password)
 

@@ -1,6 +1,6 @@
 """Some quick&dirty hack because of incomplete ...implementations..."""
 import io
-import xml.etree.ElementTree
+import xml.etree.ElementTree  # nosec
 from typing import List, Callable
 
 import fpdf.svg

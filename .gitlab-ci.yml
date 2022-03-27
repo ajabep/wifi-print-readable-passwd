@@ -1,0 +1,191 @@
+include:
+    - template: Jobs/Secret-Detection.gitlab-ci.yml
+    - template: Jobs/SAST.gitlab-ci.yml
+    - template: Security/Dependency-Scanning.gitlab-ci.yml
+    - template: Security/License-Scanning.gitlab-ci.yml
+    - template: Jobs/Code-Quality.gitlab-ci.yml
+
+
+# Change pip's cache directory to be inside the project directory since we can
+# only cache local items.
+variables:
+    PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+    PACKAGE_REGISTRY_URL: "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/$CI_PROJECT_NAME"
+
+
+# Pip's cache doesn't store the python packages
+# https://pip.pypa.io/en/stable/reference/pip_install/#caching
+#
+# If you want to also cache the installed packages, you have to install
+# them in a virtualenv and cache it as well.
+cache:
+    paths:
+        - .cache/pip
+        - .cache/pypoetry
+
+
+stages:
+    - ".pre"
+    - lint
+    - test
+    - release
+    - ".post"
+
+
+.secret-analyzer:
+    allow_failure: false
+
+.sast-analyzer:
+    allow_failure: false
+
+.ds-analyzer:
+    allow_failure: false
+
+license_scanning:
+    allow_failure: false
+
+code_quality:
+    allow_failure: false
+
+secret_detection:
+    allow_failure: false
+
+
+lint:yaml:
+    image: python:3-alpine
+    stage: lint
+    script:
+        - pip install -U yamllint
+        - yamllint .
+    rules:
+        - exists:
+              - "**.yml"
+              - "**.yaml"
+
+
+lint:toml:
+    image: debian:stable-slim
+    stage: lint
+    script:
+        - apt-get update && apt-get install -y golang-github-pelletier-go-toml
+        - "find -type f -iname '*.toml' -exec bash -c 'tomll <{} | diff - {}' ';'"
+    rules:
+        - exists:
+              - "**.toml"
+
+
+lint:py:
+    image: python:3-alpine
+    stage: lint
+    script:
+        - pip install -U flake8
+        - flake8 --statistics --ignore=E501
+
+
+security_checks:
+    image: python:3-alpine
+    stage: test
+    before_script:
+        - apk add --no-cache libffi-dev build-base python3-dev zlib jpeg-dev zlib-dev
+        - export PATH="/root/.local/bin:$PATH"
+        - python -V
+        - pip install -U pipx
+        - pipx install poetry
+        - pipx install bandit
+        - pipx install safety
+        - which poetry
+        - poetry --version
+        - poetry install --no-dev
+        - pwd
+    script:
+        - poetry run pip freeze >./requirements.txt
+        - bandit -r .
+        - safety check -r ./requirements.txt
+
+
+determineversion:
+    image:
+        name: gittools/gitversion
+        entrypoint: [""]
+    stage: .pre
+    variables:
+        GIT_STRATEGY: none
+        CI_SCRIPT_TRACE: 'true'
+    script:
+        - |
+            if [[ "${CI_SCRIPT_TRACE}" == "true" ]] || [[ -n "${CI_DEBUG_TRACE}" ]]; then
+              echo "Debugging enabled"
+              set -xv
+            fi
+
+            git checkout $CI_COMMIT_SHA GitVersion.yml || true
+
+            if [[ "${CI_GITVERSION_TRACE}" == "true" ]] || [[ -n "${CI_DEBUG_TRACE}" ]]; then
+              echo "Tracing is on, showing Gitversion configuration (including settings from defaults)..."
+              /tools/dotnet-gitversion /url $CI_REPOSITORY_URL /u gitlab-ci-token /p $CI_JOB_TOKEN /b $CI_COMMIT_REF_NAME /c $CI_COMMIT_SHA /dynamicRepoLocation $CI_PROJECT_DIR /showconfig
+              VERBOSITYSETTING='/verbosity Diagnostic'
+            fi
+
+            if [[ "$GIT_STRATEGY" != 'none' ]]; then
+              echo "GitLab CI's default cloning strategy is highly optimized and not compatible with Gitversion, please set `variables: GIT_STRATEGY: none` just for this job."
+              echo "gitversion's 'Dynamic Repositories' feature is used to clone the entire repository."
+            fi
+
+            echo "running git version and setting version in pipeline variables using dotenv artifacts"
+
+            /tools/dotnet-gitversion /url $CI_REPOSITORY_URL /u gitlab-ci-token /p $CI_JOB_TOKEN /b $CI_COMMIT_REF_NAME /c $CI_COMMIT_SHA /dynamicRepoLocation $CI_PROJECT_DIR $VERBOSITYSETTING | tee thisversion.json
+
+            for keyval in $( grep -E '": [^\{]' thisversion.json | sed -e 's/: /=/' -e "s/\(\,\)$//"); do
+              echo "export $keyval"
+              eval export $keyval
+            done
+
+            echo "Exporting some of these to dotenv files for variable usage in the pipeline and subsequent jobs..."
+            echo "SemVer=${SemVer}" >> thisversion.env
+            echo "LegacySemVer=${LegacySemVer}" >> thisversion.env
+            echo "InformationalVersion=${InformationalVersion}" >> thisversion.env
+            echo "Major=${Major}" >> thisversion.env
+            echo "Minor=${Minor}" >> thisversion.env
+            echo "Patch=${Patch}" >> thisversion.env
+            echo "MajorMinorPatch=${MajorMinorPatch}" >> thisversion.env
+            echo "PACKAGE_VERSION=${LegacySemVer}" >> thisversion.env
+    artifacts:
+        reports:
+            # propagates variables into the pipeline level
+            dotenv: thisversion.env
+
+release:
+    image: python:3-alpine
+    stage: release
+    before_script:
+        - apk add --no-cache curl libffi-dev build-base python3-dev zlib jpeg-dev zlib-dev gettext
+        - export PATH="/root/.local/bin:$PATH"
+        - curl --location --output /bin/release-cli "https://gitlab.com/api/v4/projects/gitlab-org%2Frelease-cli/packages/generic/release-cli/latest/release-cli-linux-amd64"
+        - chmod +x /bin/release-cli
+        - release-cli -v
+        - python -V
+        - pip install -U pipx
+        - pipx install poetry
+        - which poetry
+        - poetry --version
+        - poetry install
+        - pwd
+    script:
+        - poetry run python ./make.py compile
+        - mkdir "$CI_PROJECT_NAME"
+        - mv ./* "$CI_PROJECT_NAME"/ || true
+        - tar czf "$CI_PROJECT_NAME".tar.gz "$CI_PROJECT_NAME"
+        - 'curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file "$CI_PROJECT_NAME.tar.gz" "$PACKAGE_REGISTRY_URL/$PACKAGE_VERSION/build.tar.gz"'
+    release:
+        tag_name: "$PACKAGE_VERSION"
+        name: "$PACKAGE_VERSION"
+        description: "./CHANGELOG.md"
+        assets:
+            links:
+                - name: "$CI_PROJECT_NAME/$PACKAGE_VERSION/build.tar.gz"
+                  url: "$PACKAGE_REGISTRY_URL/$PACKAGE_VERSION/build.tar.gz"
+                  filepath: "/$PACKAGE_VERSION.tar.gz"
+                  link_type: package
+    rules:
+        - if: '$CI_COMMIT_BRANCH  =~ /^release-/'
+        - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
