@@ -195,7 +195,7 @@ release:
     release:
         tag_name: "$PACKAGE_VERSION"
         name: "$PACKAGE_VERSION"
-        description: "./CHANGELOG.md"
+        description: "More info with `git log`: Commit messages are explicits!"
         assets:
             links:
                 - name: "$CI_PROJECT_NAME/$PACKAGE_VERSION/build.tar.gz"
