@@ -74,8 +74,24 @@ lint:toml:
               - "**.toml"
 
 
-lint:py:
-    image: python:3-alpine
+lint:py3.10:
+    image: python:3.10-alpine
+    stage: lint
+    script:
+        - pip install -U flake8
+        - flake8 --statistics --ignore=E501
+
+
+lint:py3.9:
+    image: python:3.9-alpine
+    stage: lint
+    script:
+        - pip install -U flake8
+        - flake8 --statistics --ignore=E501
+
+
+lint:py3.8:
+    image: python:3.8-alpine
     stage: lint
     script:
         - pip install -U flake8
@@ -179,7 +195,7 @@ release:
     release:
         tag_name: "$PACKAGE_VERSION"
         name: "$PACKAGE_VERSION"
-        description: "./CHANGELOG.md"
+        description: "More info with `git log`: Commit messages are explicits!"
         assets:
             links:
                 - name: "$CI_PROJECT_NAME/$PACKAGE_VERSION/build.tar.gz"
