@@ -12,7 +12,7 @@ from paths import font_path
 
 CM_TO_PT = 72 / 2.54
 INTERLINE_SPACING = 4
-FONT_SPECT_TYPE = Dict[str, str | int]
+FONT_SPECT_TYPE = Dict[str, Union[str, int]]
 FONTS: Dict[str, FONT_SPECT_TYPE] = {
     'main': {
         'fam': 'NotoSans',
@@ -27,7 +27,7 @@ FONTS: Dict[str, FONT_SPECT_TYPE] = {
         'size': 25,
     },
 }
-FONTS |= {
+FONTS.update({
     'icons': {
         'fam': 'Icons',
         'size': FONTS['main']['size']
@@ -36,7 +36,7 @@ FONTS |= {
         'fam': 'FiraCode',
         'size': FONTS['mono']['size']
     },
-}
+})
 COLOR_TYPE = Tuple[int, int, int]  # RGB
 COLORDICT_TYPE = Dict[str, COLOR_TYPE]
 COLORS: Union[COLORDICT_TYPE, None] = None

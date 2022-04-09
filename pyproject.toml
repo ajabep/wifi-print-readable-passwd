@@ -5,7 +5,7 @@ description = "Provide a readable and accessible Wi-Fi card."
 authors = ["Ajabep <ajabep@tutanota.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.8"
 click = "^8.0.4"
 tomlkit = "^0.10.0"
 fpdf2 = "^2.5.1"

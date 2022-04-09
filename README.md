@@ -2,6 +2,7 @@
 
 [![Under license Creative Commons Attribution 4.0 International.](https://img.shields.io/badge/license-CC_BY_4.0-brightgreen)](./LICENSE)
 ![This project is accessible.](https://img.shields.io/badge/-accessible-brightgreen)
+![This project works well with python 3.8, 3.9 and 3.10.](https://img.shields.io/badge/python-3.8%20%7C%203.9%20%7C%203.10-blue)
 
 > WTF! Is it a "big o" or a "zero"? And is it a "big i" or a "little l"? Fuuuuuuuuuu 🤬
 
@@ -41,7 +42,7 @@ You can find the PDF [in the example directory](example/example.pdf).
 
 ## How to use
 
-1. Be sure to have Python 10 & Poetry (else install poetry using pip: `pipx install poetry`).
+1. Be sure to have Python >= 3.8 and <= 3.10 & Poetry (else install poetry using pip: `pipx install poetry`).
 2. Install the poetry environment (`poetry install --no-dev`).
 3. If needed (= if you edit translations, or you haven't taken codebase from a release), compile translations file
    (execute file `poetry run python make.py compile`)

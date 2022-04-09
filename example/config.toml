@@ -1,0 +1,22 @@
+[Guest]
+security = "Open"
+
+["Congress Attendees"]
+ssid = "Attendees"
+security = "WPA3-PSK"
+password = "abcABC123!|IljoO0@5S"
+
+["Congress Open Printer"]
+ssid = "Printer 4838"
+security = "Open"
+hidden = true
+
+["Congress Staff"]
+security = "WPA3-PSK"
+password = "abcABC123!|IljoO0@5S"
+hidden = true
+
+["Congress Lab"]
+security = "WPA"
+password = "abcABC123!|IljoO0@5S"
+hidden = true
