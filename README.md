@@ -41,12 +41,12 @@ You can find the PDF [in the example directory](example/example.pdf).
 
 ## How to use
 
-1. Be sure to have Python 10 & Poetry (`pipx install poetry`).
+1. Be sure to have Python 10 & Poetry (else install poetry using pip: `pipx install poetry`).
 2. Install the poetry environment (`poetry install --no-dev`).
 3. If needed (= if you edit translations, or you haven't taken codebase from a release), compile translations file
-   (execute file `make.py compile`)
-4. Execute `main.py cli --help` to discover options. Else, fill a configuration file (based on `config.sample.toml`) and
-   execute `main.py generate`.
+   (execute file `poetry run python make.py compile`)
+4. Execute `poetry run python main.py cli --help` to discover options. Else, fill a configuration file (based on
+   `config.sample.toml`) and execute `poetry run python main.py generate`.
 
 ## How to contribute
 
