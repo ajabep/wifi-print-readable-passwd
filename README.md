@@ -11,6 +11,19 @@ This program does it well.
 
 If it does not as well as it pretends, open an issue 😃
 
+## And yours? Does it well?
+
+I try. Here is an example of output:
+
+![Render the 1st page of the example PDF.](example/example-0.png)
+![Render the 2nd page of the example PDF.](example/example-1.png)
+![Render the 3rd page of the example PDF.](example/example-2.png)
+![Render the 4nd page of the example PDF.](example/example-3.png)
+![Render the 5nd page of the example PDF.](example/example-4.png)
+
+You can find the PDF [in the example directory](example/example.pdf).
+
+
 ## Features
 
 1. Each char category has a different color. Colors, by default, are made for being differentiated by most of
