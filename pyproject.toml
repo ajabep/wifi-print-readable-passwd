@@ -14,7 +14,7 @@ jschon = "^0.8.4"
 aenum = "^3.1.8"
 
 [tool.poetry.dev-dependencies]
-Django = "^4.0.3"
+Django = "^4.0.4"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
