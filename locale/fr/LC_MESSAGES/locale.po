@@ -1,40 +1,44 @@
 # Copyright (C) 2022
-# This file is distributed under the same license as the wifi-print-readable-passwd package.
+# This file is distributed under the same license as the
+# wifi-print-readable-passwd package.
 # Ajabep <ajabep@tutanota.com>, 2022
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: 1.0\n"
+"Project-Id-Version:  1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-03-26 21:02+0100\n"
+"POT-Creation-Date: 2022-08-23 15:17+0200\n"
 "PO-Revision-Date: 2022-03-26 20:57+0100\n"
 "Last-Translator: Ajabep <ajabep@tutanota.com>\n"
-"Language-Team: Ajabep <ajabep@tutanota.com>\n"
 "Language: fr\n"
+"Language-Team: Ajabep <ajabep@tutanota.com>\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.10.3\n"
 
-#: .\main.py:103
+#: C:/Users/Jez/Documents/code/wifi-print-readable-passwd/main.py:103
 msgid "Wi-Fi QRCode"
 msgstr "QRCode Wi-Fi"
 
-#: .\main.py:206
+#: C:/Users/Jez/Documents/code/wifi-print-readable-passwd/main.py:206
 msgid "No password"
 msgstr "Aucun mot de passe"
 
-#: .\main.py:267
+#: C:/Users/Jez/Documents/code/wifi-print-readable-passwd/main.py:268
 msgid "Security"
 msgstr "Sécurité"
 
-#: .\main.py:277
+#: C:/Users/Jez/Documents/code/wifi-print-readable-passwd/main.py:278
 msgid "None"
 msgstr "Aucune"
 
-#: .\main.py:286
+#: C:/Users/Jez/Documents/code/wifi-print-readable-passwd/main.py:287
 msgid "Hidden Wi-Fi"
 msgstr "Wi-Fi caché"
 
-#: .\main.py:295
+#: C:/Users/Jez/Documents/code/wifi-print-readable-passwd/main.py:296
 msgid "Not shown in the Wi-Fi list."
 msgstr "N'apparait pas sur votre liste Wi-Fi."
+
